@@ -29,6 +29,7 @@ public enum ErrorCodes {
 
   //Category's Errors
   CAT_01("CAT_01", "Don't exist category with this ID."),
+  CAT_02("CAT_02", "The field(s) are/is required."),
 
   //Department's Errors
   DEP_01("DEP_01", "The ID is not a number."),

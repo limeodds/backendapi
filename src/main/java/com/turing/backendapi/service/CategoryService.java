@@ -2,6 +2,7 @@ package com.turing.backendapi.service;
 
 import static com.turing.backendapi.controller.exception.ErrorCodes.PAG_02;
 import static com.turing.backendapi.controller.exception.ErrorCodes.PAG_03;
+import static com.turing.backendapi.service.converter.CategoryConverter.toDomain;
 import static java.util.stream.Collectors.toList;
 
 import com.turing.backendapi.controller.exception.BadRequestException;
@@ -10,6 +11,7 @@ import com.turing.backendapi.domain.DomainPage;
 import com.turing.backendapi.repository.CategoryRepository;
 import com.turing.backendapi.repository.entity.CategoryEntity;
 import com.turing.backendapi.service.converter.CategoryConverter;
+import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,16 @@ public class CategoryService {
         Page<CategoryEntity> pageEntity = categoryRepository.findAll(pageable);
 
         return new DomainPage<>(pageEntity.getTotalElements(), pageEntity.get().map(CategoryConverter::toDomain).collect(toList()));
+    }
+
+    public Category getById(Integer id) {
+        return toDomain(categoryRepository.findById(id).orElse(null));
+    }
+
+    public List<Category> getByProductId(int productId) {
+        return categoryRepository.findInProduct(productId).stream()
+            .map(o -> (Object[]) o).map(o -> Category.builder().category_id((Integer) o[0]).department_id((Integer) o[1]).name((String) o[2]).build())
+            .collect(toList());
     }
 
 }
