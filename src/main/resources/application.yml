@@ -1,0 +1,14 @@
+server.port: 8081
+
+spring:
+  application.name: backend-api
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/turing'
+    username: 'limeodds'
+    password: 'Pass123'
+  jpa:
+    properties:
+      hibernate:
+        dialect: 'org.hibernate.dialect.MySQLDialect'
+        id.new_generator_mappings: false
+        format_sql: true
