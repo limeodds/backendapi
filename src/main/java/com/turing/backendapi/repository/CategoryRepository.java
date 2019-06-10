@@ -18,4 +18,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<CategoryE
 
     @Query(nativeQuery = true,value = "call catalog_get_categories_for_product(:inProductId)")
     List<Object> findInProduct(@Param("inProductId") int inProductId);
+
+    @Query("select t from CategoryEntity t where t.department_id = ?1")
+    List<CategoryEntity> findByDepartmentId(Integer departmentId);
 }
