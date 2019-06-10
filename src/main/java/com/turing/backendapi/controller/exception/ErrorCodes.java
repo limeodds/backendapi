@@ -13,6 +13,7 @@ public enum ErrorCodes {
   //Pagination's Errors
   PAG_01("PAG_01", "The order is not matched 'field,(DESC|ASC)'."),
   PAG_02("PAG_02", "The field of order is not allow sorting."),
+  PAG_03("PAG_03", "Invalid pagination parameter. Must be an integer >0."),
 
 
   //User's Errors
