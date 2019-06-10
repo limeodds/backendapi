@@ -26,14 +26,18 @@ public class CustomerService implements UserDetailsService {
     this.customerRepository = customerRepository;
   }
 
+  public Customer getByEmail(String email){
+    return toDomain(customerRepository.findByEmail(email));
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     CustomerEntity byEmail = customerRepository.findByEmail(username);
-    return new AuthUserDetails(byEmail.getEmail(), byEmail.getPassword());
+    return new AuthUserDetails(byEmail.getEmail(), "{noop}" + byEmail.getPassword());
   }
 
   @Transactional
-  public Customer register(Customer newCustomer) {
+  public Customer save(Customer newCustomer) {
     CustomerEntity savedEntity = customerRepository.save(toDb(newCustomer));
 
     return toDomain(savedEntity);
