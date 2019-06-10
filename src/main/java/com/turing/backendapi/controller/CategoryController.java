@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/categories")
-@Api(value = "Everything about Categories", tags = {"categories"})
+@Api(description = "Everything about Categories", tags = {"categories"})
 public class CategoryController {
 
   private final CategoryService categoryService;

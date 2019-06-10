@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/departments")
-@Api(value = "Everything about Department", tags = {"departments"})
+@Api(description = "Everything about Department", tags = {"departments"})
 public class DepartmentController {
 
     private final DepartmentService departmentService;
@@ -53,11 +53,8 @@ public class DepartmentController {
         @ApiResponse(code = 400, message = "Return a error object")
     }
     )
-    public DepartmentDto getById(@ApiParam(value = "ID of Department", required = true) @PathVariable("department_id") String department_id) {
-        Integer departmentId;
-        try {
-            departmentId = Integer.parseInt(department_id);
-        } catch (NumberFormatException e) {
+    public DepartmentDto getById(@ApiParam(value = "ID of Department", required = true) @PathVariable("department_id") Integer departmentId) {
+        if(departmentId == null) {
             throw new BadRequestException(DEP_01.getCode(), DEP_01.getDescription(), "department_id");
         }
 

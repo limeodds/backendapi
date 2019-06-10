@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/customers")
-@Api(value = "Everything about Customers", tags = { "customers" })
+@Api(description = "Everything about Customers", tags = { "customers" })
 public class CustomerController {
 
     private final CustomerService customerService;

@@ -33,7 +33,11 @@ public enum ErrorCodes {
 
   //Department's Errors
   DEP_01("DEP_01", "The ID is not a number."),
-  DEP_02("DEP_02", "Don'exist department with this ID.");
+  DEP_02("DEP_02", "Don'exist department with this ID."),
+
+  //Attribute's Errors
+  ATR_01("ATR_01", "The ID is not a number."),
+  ATR_02("ATR_02", "Don'exist attribute with this ID.");
 
   private final String code;
   private final String description;
