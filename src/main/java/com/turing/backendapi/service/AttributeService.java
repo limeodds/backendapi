@@ -1,8 +1,13 @@
 package com.turing.backendapi.service;
 
 import com.turing.backendapi.domain.Attribute;
+import com.turing.backendapi.domain.AttributeValue;
+import com.turing.backendapi.domain.Category;
+import com.turing.backendapi.domain.ProductAttribute;
 import com.turing.backendapi.repository.AttributeRepository;
+import com.turing.backendapi.repository.AttributeValueRepository;
 import com.turing.backendapi.service.converter.AttributeConverter;
+import com.turing.backendapi.service.converter.AttributeValueConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,10 +25,12 @@ public class AttributeService {
 
 
   private final AttributeRepository attributeRepository;
+  private final AttributeValueRepository attributeValueRepository;
 
   @Autowired
-  public AttributeService(AttributeRepository attributeRepository) {
+  public AttributeService(AttributeRepository attributeRepository, AttributeValueRepository attributeValueRepository) {
     this.attributeRepository = attributeRepository;
+    this.attributeValueRepository = attributeValueRepository;
   }
 
   public List<Attribute> getAll() {
@@ -34,4 +41,16 @@ public class AttributeService {
     return AttributeConverter.toDomain(attributeRepository.findById(id).orElse(null));
   }
 
+  public List<AttributeValue> getAttributeValuesByAttributeId(Integer attributeId) {
+    return attributeValueRepository.findByAttributeId(attributeId).stream().map(AttributeValueConverter::toDomain).collect(toList());
+  }
+
+  public List<ProductAttribute> getAttributeValuesByProductId(int productId) {
+    return attributeValueRepository.findByProductId(productId).stream()
+                             .map(o -> (Object[]) o).map(o -> ProductAttribute.builder()
+                                                                              .name((String) o[0])
+                                                                              .attribute_value_id((Integer) o[1])
+                                                                              .value((String) o[2]).build())
+                             .collect(toList());
+  }
 }
