@@ -39,6 +39,8 @@ public enum ErrorCodes {
   ATR_01("ATR_01", "The ID is not a number."),
   ATR_02("ATR_02", "Don'exist attribute with this ID.");
 
+  //Product's Errors
+
   private final String code;
   private final String description;
 

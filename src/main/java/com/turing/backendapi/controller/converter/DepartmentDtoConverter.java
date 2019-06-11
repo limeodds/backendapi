@@ -11,7 +11,7 @@ public class DepartmentDtoConverter {
     return DepartmentDto.builder()
                         .department_id(domainObj.getDepartment_id())
                         .name(domainObj.getName())
-                        .description((domainObj.getDescription()))
+                        .description(domainObj.getDescription())
                         .build();
 
   }
@@ -23,7 +23,7 @@ public class DepartmentDtoConverter {
     return Department.builder()
                      .department_id(entityObj.getDepartment_id())
                      .name(entityObj.getName())
-                     .description((entityObj.getDescription()))
+                     .description(entityObj.getDescription())
                      .build();
 
   }
