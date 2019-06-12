@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * https://medium.com/@hantsy/protect-rest-apis-with-spring-security-and-jwt-5fbc90305cc5
  */
 @RestController
-@RequestMapping("/customers")
+@RequestMapping(value = "/customers", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Customers", tags = { "customers" })
 public class CustomerController {
 
@@ -45,7 +45,7 @@ public class CustomerController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     @ApiOperation(value = "Register a Customer")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a Object of Customer with auth credentials"),
@@ -74,7 +74,7 @@ public class CustomerController {
         return Map.of("customer", savedCustomer, "accessToken", token, "expires_in", "24h");
     }
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     @ApiOperation(value = "Sign in in the Shopping.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a Object of Customer with auth credentials"),

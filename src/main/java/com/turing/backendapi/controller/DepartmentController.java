@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/departments")
+@RequestMapping(value = "/departments", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Department", tags = {"departments"})
 public class DepartmentController {
 
@@ -35,7 +35,7 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     @ApiOperation(value = "Get Departments")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "An Array of Object Department"),
@@ -46,7 +46,7 @@ public class DepartmentController {
         return departmentService.getAll().stream().map(DepartmentDtoConverter::toDto).collect(toList());
     }
 
-    @GetMapping(value = "/{department_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{department_id}")
     @ApiOperation(value = "Get Department by ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A object of Department"),

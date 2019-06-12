@@ -6,6 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCodes {
+  //General Errors
+  GEN_01("GEN_01", "The field(s) are/is required."),
+
   //Authentication's Errors
   AUT_01("AUT_01", "Authorization code is empty."),
   AUT_02("AUT_02", "Access Unauthorized."),
@@ -37,9 +40,10 @@ public enum ErrorCodes {
 
   //Attribute's Errors
   ATR_01("ATR_01", "The ID is not a number."),
-  ATR_02("ATR_02", "Don'exist attribute with this ID.");
+  ATR_02("ATR_02", "Don'exist attribute with this ID."),
 
   //Product's Errors
+  PRD_01("PRD_01", "Don'exist product with this ID.");
 
   private final String code;
   private final String description;

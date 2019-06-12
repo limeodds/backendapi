@@ -21,7 +21,7 @@ import static com.turing.backendapi.controller.exception.ErrorCodes.CAT_02;
 import static java.util.stream.Collectors.toList;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping(value = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Categories", tags = {"categories"})
 public class CategoryController {
 
@@ -32,7 +32,7 @@ public class CategoryController {
     this.categoryService = categoryService;
   }
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping
   @ApiOperation(value = "Get Categories")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "Return a list with count (total categories) and the rows of Categories"),
@@ -56,7 +56,7 @@ public class CategoryController {
     return new DtoPage<>(domainPage.getCount(), domainPage.getRows().stream().map(CategoryDtoConverter::toDto).collect(toList()));
   }
 
-  @GetMapping(value = "/{category_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/{category_id}")
   @ApiOperation(value = "Get Category by ID")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "Return a object of Category"),
@@ -77,7 +77,7 @@ public class CategoryController {
     return CategoryDtoConverter.toDto(byId);
   }
 
-  @GetMapping(value = "/inProduct/{product_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/inProduct/{product_id}")
   @ApiOperation(value = "Get Categories of a Product")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "Return a array of Category Objects"),

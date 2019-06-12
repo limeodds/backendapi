@@ -24,7 +24,7 @@ import static com.turing.backendapi.controller.exception.ErrorCodes.ATR_02;
 import static java.util.stream.Collectors.toList;
 
 @RestController
-@RequestMapping("/attributes")
+@RequestMapping(value = "/attributes", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Attributes", tags = {"attributes"})
 public class AttributeController {
 
@@ -35,7 +35,7 @@ public class AttributeController {
     this.attributeService = attributeService;
   }
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping
   @ApiOperation(value = "Get Attribute list")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "List of Attribute Objects"),
@@ -46,7 +46,7 @@ public class AttributeController {
     return attributeService.getAll().stream().map(AttributeDtoConverter::toDto).collect(toList());
   }
 
-  @GetMapping(value = "/{attribute_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/{attribute_id}")
   @ApiOperation(value = "Get Attribute by ID")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "A object of Attribute"),
@@ -67,7 +67,7 @@ public class AttributeController {
     return AttributeDtoConverter.toDto(byId);
   }
 
-  @GetMapping(value = "/values/{attribute_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/values/{attribute_id}")
   @ApiOperation(value = "Get Values Attribute from Attribute")
   @ApiResponses(value = {
   @ApiResponse(code = 200, message = "Return a list of Attribute Values"),

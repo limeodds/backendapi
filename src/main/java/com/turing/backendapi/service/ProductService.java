@@ -11,8 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import static com.turing.backendapi.controller.exception.ErrorCodes.PAG_03;
 import static com.turing.backendapi.service.converter.ProductConverter.toDomain;
@@ -50,6 +54,61 @@ public class ProductService {
     Page<ProductEntity> pageEntity = productRepository.findAll(pageable);
 
     return new DomainPage<>(pageEntity.getTotalElements(), pageEntity.get().map(ProductConverter::toDomain).collect(toList()));
+  }
+
+  public int catalogSearchCount(String searchString, String allWords){
+    return productRepository.catalogSearchCount(searchString, allWords);
+  }
+
+  public List<Product> catalogSearch(String searchString, String allWords, int page, int limit, int description_length) {
+    return productRepository.catalogSearch(searchString, allWords, description_length, limit, page)
+                            .stream()
+                            .map(o -> Product.builder()
+                                             .product_id((Integer) o[0])
+                                             .name((String) o[1])
+                                             .description((String) o[2])
+                                             .price((BigDecimal) o[3])
+                                             .discounted_price((BigDecimal) o[4])
+                                             .thumbnail((String) o[5])
+                                             .build())
+                            .collect(toList());
+  }
+
+  public int productsInCategoryCount(int categoryId){
+    return productRepository.productsInCategoryCount(categoryId);
+  }
+
+  public List<Product> productsInCategory(int categoryId, int page, int limit, int description_length) {
+    return productRepository.productsInCategory(categoryId, description_length, limit, page)
+                            .stream()
+                            .map(o -> Product.builder()
+                                             .product_id((Integer) o[0])
+                                             .name((String) o[1])
+                                             .description((String) o[2])
+                                             .price((BigDecimal) o[3])
+                                             .discounted_price((BigDecimal) o[4])
+                                             .thumbnail((String) o[5])
+                                             .build())
+                            .collect(toList());
+  }
+
+
+  public int productsInDepartmentCount(int departmentId){
+    return productRepository.productsInDepartmentCount(departmentId);
+  }
+
+  public List<Product> productsInDepartment(int departmentId, int page, int limit, int description_length) {
+    return productRepository.productsInDepartment(departmentId, description_length, limit, page)
+                            .stream()
+                            .map(o -> Product.builder()
+                                             .product_id((Integer) o[0])
+                                             .name((String) o[1])
+                                             .description((String) o[2])
+                                             .price((BigDecimal) o[3])
+                                             .discounted_price((BigDecimal) o[4])
+                                             .thumbnail((String) o[5])
+                                             .build())
+                            .collect(toList());
   }
 
   public Product getById(Integer id) {
