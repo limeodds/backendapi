@@ -36,6 +36,10 @@ public class CustomerService implements UserDetailsService {
     return new AuthUserDetails(byEmail.getCustomer_id(), byEmail.getEmail(), "{noop}" + byEmail.getPassword());
   }
 
+  public Customer getById(Integer id) {
+    return toDomain(customerRepository.findById(id).orElse(null));
+  }
+
   @Transactional
   public Customer save(Customer newCustomer) {
     CustomerEntity savedEntity = customerRepository.save(toDb(newCustomer));

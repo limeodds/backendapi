@@ -43,7 +43,10 @@ public enum ErrorCodes {
   ATR_02("ATR_02", "Don'exist attribute with this ID."),
 
   //Product's Errors
-  PRD_01("PRD_01", "Don'exist product with this ID.");
+  PRD_01("PRD_01", "Don'exist product with this ID."),
+
+  //Customer's Errors
+  CST_01("CST_01", "Don'exist customer with this ID.");
 
   private final String code;
   private final String description;
