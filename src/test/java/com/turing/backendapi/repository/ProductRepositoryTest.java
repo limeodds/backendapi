@@ -24,4 +24,11 @@ public class ProductRepositoryTest {
   public void catalogSearch() {
     List<Object[]> objects = productRepository.catalogSearch("Coat Italy", "off", 50, 3, 1);
   }
+
+  @Test
+  public void productReviews() {
+    List<Object[]> objects = productRepository.productReviews(1);
+
+    System.out.println(objects);
+  }
 }

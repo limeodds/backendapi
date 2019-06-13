@@ -43,4 +43,10 @@ public interface ProductRepository extends PagingAndSortingRepository<ProductEnt
                                       @Param("inShortProductDescriptionLength") int inShortProductDescriptionLength,
                                       @Param("inProductsPerPage") int inProductsPerPage,
                                       @Param("inStartItem") int inStartItem);
+
+  @Query(nativeQuery = true, value = "call catalog_get_product_locations(:inProductId)")
+  List<Object[]> productLocations(@Param("inProductId") int inProductId);
+
+  @Query(nativeQuery = true, value = "call catalog_get_product_reviews(:inProductId)")
+  List<Object[]> productReviews(@Param("inProductId") int inProductId);
 }

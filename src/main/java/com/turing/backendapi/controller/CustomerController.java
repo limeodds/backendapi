@@ -6,7 +6,6 @@ import static com.turing.backendapi.controller.exception.ErrorCodes.USR_04;
 
 import com.turing.backendapi.authentication.JwtTokenProvider;
 import com.turing.backendapi.controller.exception.BadRequestException;
-import com.turing.backendapi.controller.exception.ErrorCodes;
 import com.turing.backendapi.domain.Customer;
 import com.turing.backendapi.service.CustomerService;
 import io.swagger.annotations.Api;
@@ -26,12 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Documentation:
- * https://medium.com/@hantsy/protect-rest-apis-with-spring-security-and-jwt-5fbc90305cc5
+ * Documentation: https://medium.com/@hantsy/protect-rest-apis-with-spring-security-and-jwt-5fbc90305cc5
  */
 @RestController
 @RequestMapping(value = "/customers", produces = MediaType.APPLICATION_JSON_VALUE)
-@Api(description = "Everything about Customers", tags = { "customers" })
+@Api(description = "Everything about Customers", tags = {"customers"})
 public class CustomerController {
 
     private final CustomerService customerService;
@@ -49,9 +47,7 @@ public class CustomerController {
     @ApiOperation(value = "Register a Customer")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a Object of Customer with auth credentials"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public Map<String, Object> register(@RequestParam String name, @RequestParam String email, @RequestParam String password) {
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(email) || StringUtils.isEmpty(password)) {
             throw new BadRequestException(USR_02.getCode(), USR_02.getDescription(), "name, email, password");
@@ -96,7 +92,7 @@ public class CustomerController {
         return Map.of("customer", customer, "accessToken", token, "expires_in", "24h");
     }
 
-    private String authenticate(String email, String password){
+    private String authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         return jwtTokenProvider.createToken(email, Collections.emptyList());
     }

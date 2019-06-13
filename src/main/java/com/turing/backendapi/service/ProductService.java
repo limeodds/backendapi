@@ -3,9 +3,13 @@ package com.turing.backendapi.service;
 import com.turing.backendapi.controller.exception.BadRequestException;
 import com.turing.backendapi.domain.DomainPage;
 import com.turing.backendapi.domain.Product;
+import com.turing.backendapi.domain.ProductLocation;
+import com.turing.backendapi.domain.ProductReview;
 import com.turing.backendapi.repository.ProductRepository;
 import com.turing.backendapi.repository.entity.ProductEntity;
 import com.turing.backendapi.service.converter.ProductConverter;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -115,5 +119,27 @@ public class ProductService {
     return toDomain(productRepository.findById(id).orElse(null));
   }
 
+  public List<ProductLocation> getProductLocations(int productId) {
+    return productRepository.productLocations(productId)
+        .stream()
+        .map(o -> ProductLocation.builder()
+            .category_id((Integer) o[0])
+            .category_name((String) o[1])
+            .department_id((Integer) o[2])
+            .department_name((String) o[3])
+            .build())
+        .collect(toList());
+  }
 
+  public List<ProductReview> getProductReviews(int productId) {
+    return productRepository.productReviews(productId)
+        .stream()
+        .map(o -> ProductReview.builder()
+            .name((String) o[0])
+            .review((String) o[1])
+            .rating((Short) o[2])
+            .created_on(((Timestamp) o[3]).toLocalDateTime())
+            .build())
+        .collect(toList());
+  }
 }
