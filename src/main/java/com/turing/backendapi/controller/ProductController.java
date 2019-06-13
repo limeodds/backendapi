@@ -5,6 +5,7 @@ import static com.turing.backendapi.controller.exception.ErrorCodes.GEN_01;
 import static com.turing.backendapi.controller.exception.ErrorCodes.PRD_01;
 import static java.util.stream.Collectors.toList;
 
+import com.turing.backendapi.authentication.AuthUserDetails;
 import com.turing.backendapi.controller.converter.ProductDtoConverter;
 import com.turing.backendapi.controller.dto.DtoPage;
 import com.turing.backendapi.controller.dto.DtoUtils;
@@ -18,6 +19,8 @@ import com.turing.backendapi.domain.DomainPage;
 import com.turing.backendapi.domain.Product;
 import com.turing.backendapi.service.ProductService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -25,8 +28,10 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -237,5 +242,29 @@ public class ProductController {
             .collect(toList());
     }
 
-    //TODO implement POST /products/{product_id}/reviews
+    @PostMapping("/{product_id}/reviews")
+    @ApiOperation(value = "Create a review")
+    @ApiImplicitParams({@ApiImplicitParam(name = "USER-KEY", value = "JWT Token", dataType = "string", paramType = "header")})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "No data."),
+        @ApiResponse(code = 400, message = "Return a error object")})
+    public void createReview(
+        @ApiParam(value = "Product ID", required = true) @RequestParam Integer product_id,
+        @ApiParam(value = "Review Text of Product", required = true) @RequestParam String review,
+        @ApiParam(value = "Rating of Product", required = true) @RequestParam Integer rating) {
+        if (StringUtils.isEmpty(product_id)) {
+            throw new BadRequestException(GEN_01.getCode(), GEN_01.getDescription(), "product_id");
+        }
+        if (StringUtils.isEmpty(review)) {
+            throw new BadRequestException(GEN_01.getCode(), GEN_01.getDescription(), "review");
+        }
+        if (StringUtils.isEmpty(rating)) {
+            throw new BadRequestException(GEN_01.getCode(), GEN_01.getDescription(), "rating");
+        }
+
+        AuthUserDetails principal = (AuthUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        productService.createProductReview(principal.getId(), product_id, review, rating);
+    }
+
 }

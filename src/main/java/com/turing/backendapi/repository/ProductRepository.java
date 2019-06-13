@@ -3,6 +3,7 @@ package com.turing.backendapi.repository;
 import com.turing.backendapi.repository.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -49,4 +50,11 @@ public interface ProductRepository extends PagingAndSortingRepository<ProductEnt
 
   @Query(nativeQuery = true, value = "call catalog_get_product_reviews(:inProductId)")
   List<Object[]> productReviews(@Param("inProductId") int inProductId);
+
+  @Modifying
+  @Query(nativeQuery = true, value = "call catalog_create_product_review(:inCustomerId, :inProductId, :inReview, :inRating)")
+  void createProductReview(@Param("inCustomerId") int inCustomerId,
+      @Param("inProductId") int inProductId,
+      @Param("inReview") String inReview,
+      @Param("inRating") int inRating);
 }

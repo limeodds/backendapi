@@ -33,7 +33,7 @@ public class CustomerService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     CustomerEntity byEmail = customerRepository.findByEmail(username);
-    return new AuthUserDetails(byEmail.getEmail(), "{noop}" + byEmail.getPassword());
+    return new AuthUserDetails(byEmail.getCustomer_id(), byEmail.getEmail(), "{noop}" + byEmail.getPassword());
   }
 
   @Transactional

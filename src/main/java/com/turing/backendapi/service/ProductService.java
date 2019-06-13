@@ -142,4 +142,9 @@ public class ProductService {
             .build())
         .collect(toList());
   }
+
+  @Transactional
+  public void createProductReview(int customerId, int productId, String review, int rating){
+    productRepository.createProductReview(customerId, productId, review, rating);
+  }
 }
