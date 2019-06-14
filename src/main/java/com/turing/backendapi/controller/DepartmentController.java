@@ -1,8 +1,8 @@
 package com.turing.backendapi.controller;
 
 
-import static com.turing.backendapi.controller.exception.ErrorCodes.DEP_01;
 import static com.turing.backendapi.controller.exception.ErrorCodes.DEP_02;
+import static com.turing.backendapi.controller.exception.ErrorCodes.GEN_01;
 import static java.util.stream.Collectors.toList;
 
 import com.turing.backendapi.controller.converter.DepartmentDtoConverter;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/departments", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Department", tags = {"departments"})
-public class DepartmentController {
+public class DepartmentController implements Validation {
 
     private final DepartmentService departmentService;
 
@@ -39,9 +39,7 @@ public class DepartmentController {
     @ApiOperation(value = "Get Departments")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "An Array of Object Department"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public List<DepartmentDto> getAll() {
         return departmentService.getAll().stream().map(DepartmentDtoConverter::toDto).collect(toList());
     }
@@ -50,13 +48,9 @@ public class DepartmentController {
     @ApiOperation(value = "Get Department by ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "A object of Department"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public DepartmentDto getById(@ApiParam(value = "ID of Department", required = true) @PathVariable("department_id") Integer departmentId) {
-        if(departmentId == null) {
-            throw new BadRequestException(DEP_01.getCode(), DEP_01.getDescription(), "department_id");
-        }
+        checkNotEmpty(departmentId, GEN_01, "department_id");
 
         Department byId = departmentService.getById(departmentId);
 
