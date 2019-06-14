@@ -15,13 +15,13 @@ import java.util.Map;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(BadRequestException.class)
-  public final ResponseEntity<Map> handleNotFoundException(BadRequestException ex, WebRequest request) {
+  public final ResponseEntity<ErrorResponse> handleNotFoundException(BadRequestException ex, WebRequest request) {
     ErrorResponse errorResponse = ErrorResponse.builder()
                                                .status(HttpStatus.BAD_REQUEST.value())
                                                .code(ex.getCode())
                                                .message(ex.getMessage())
                                                .field(ex.getField())
                                                .build();
-    return new ResponseEntity<>(Map.of("error", errorResponse), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 }

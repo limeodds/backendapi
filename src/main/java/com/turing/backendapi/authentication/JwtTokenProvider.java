@@ -19,8 +19,9 @@ import java.util.List;
 public class JwtTokenProvider {
   @Value("${security.jwt.token.secret-key:secret}")
   private String secretKey = "secret";
-  @Value("${security.jwt.token.expire-length:3600000}")
-  private long validityInMilliseconds = 3600000; // 1h
+
+  private final long validityInMilliseconds = 1000 * 60 * 60 * 24; // 24h
+
   @Autowired
   private UserDetailsService userDetailsService;
 
@@ -29,18 +30,17 @@ public class JwtTokenProvider {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
   }
 
-  public String
-  createToken(String username, List<String> roles) {
+  public String createToken(String username, List<String> roles) {
     Claims claims = Jwts.claims().setSubject(username);
     claims.put("roles", roles);
     Date now = new Date();
     Date validity = new Date(now.getTime() + validityInMilliseconds);
-    return Jwts.builder()//
-               .setClaims(claims)//
-               .setIssuedAt(now)//
-               .setExpiration(validity)//
-               .signWith(SignatureAlgorithm.HS256, secretKey)//
-               .compact();
+    return "Bearer " + Jwts.builder()//
+                           .setClaims(claims)//
+                           .setIssuedAt(now)//
+                           .setExpiration(validity)//
+                           .signWith(SignatureAlgorithm.HS256, secretKey)//
+                           .compact();
   }
 
   public Authentication getAuthentication(String token) {
