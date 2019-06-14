@@ -1,6 +1,7 @@
 package com.turing.backendapi.service;
 
 import com.turing.backendapi.authentication.AuthUserDetails;
+import com.turing.backendapi.authentication.InvalidJwtAuthenticationException;
 import com.turing.backendapi.domain.Customer;
 import com.turing.backendapi.repository.CustomerRepository;
 import com.turing.backendapi.repository.entity.CustomerEntity;
@@ -33,6 +34,10 @@ public class CustomerService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     CustomerEntity byEmail = customerRepository.findByEmail(username);
+    if(byEmail == null) {
+      throw new InvalidJwtAuthenticationException("Invalid email");
+    }
+
     return new AuthUserDetails(byEmail.getCustomer_id(), byEmail.getEmail(), "{noop}" + byEmail.getPassword());
   }
 

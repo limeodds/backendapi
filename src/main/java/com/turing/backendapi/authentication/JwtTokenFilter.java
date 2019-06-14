@@ -1,7 +1,11 @@
 package com.turing.backendapi.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.turing.backendapi.controller.exception.UnauthorizedResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -9,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtTokenFilter extends GenericFilterBean {
@@ -21,10 +26,23 @@ public class JwtTokenFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
   throws IOException, ServletException {
+    HttpServletResponse response = (HttpServletResponse) res;
+
     String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-    if (token != null && jwtTokenProvider.validateToken(token)) {
-      Authentication auth = token != null ? jwtTokenProvider.getAuthentication(token) : null;
-      SecurityContextHolder.getContext().setAuthentication(auth);
+    try {
+      if (token != null && jwtTokenProvider.validateToken(token)) {
+        Authentication auth = jwtTokenProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+      }
+    } catch (InvalidJwtAuthenticationException e) {
+      UnauthorizedResponse errorResponse = UnauthorizedResponse.builder()
+                                                               .code("AUT_02")
+                                                               .message("The apikey is invalid.")
+                                                               .field("API-KEY")
+                                                               .build();
+
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, new ObjectMapper().writeValueAsString(errorResponse));
+      return ;
     }
     filterChain.doFilter(req, res);
   }

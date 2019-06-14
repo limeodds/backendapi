@@ -17,6 +17,8 @@ import java.util.List;
 
 @Component
 public class JwtTokenProvider {
+  public static final String AUTHORISATION_HEADER_NAME = "USER-KEY";
+
   @Value("${security.jwt.token.secret-key:secret}")
   private String secretKey = "secret";
 
@@ -53,7 +55,7 @@ public class JwtTokenProvider {
   }
 
   public String resolveToken(HttpServletRequest req) {
-    String bearerToken = req.getHeader("USER-KEY");
+    String bearerToken = req.getHeader(AUTHORISATION_HEADER_NAME);
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7);
     }
