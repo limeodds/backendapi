@@ -49,9 +49,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Get All Products")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the total of products and a list of Products in row."),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public DtoPage<ProductDto> allProducts(
         @ApiParam(value = "Inform the page. Starting with 1. Default: 1") @RequestParam(required = false) Integer page,
         @ApiParam(value = "Limit per page, Default: 20.") @RequestParam(required = false) Integer limit,
@@ -71,9 +69,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Search products")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the total of products and a list of products."),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public DtoPage<ProductDto> search(
         @ApiParam(value = "Query to search.", required = true) @RequestParam String query_string,
         @ApiParam(value = "All words or no. Default: on. Available values : on, off") @RequestParam(required = false) String all_words,
@@ -97,9 +93,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Product by ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a Product Object"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public ProductAllFieldsDto getById(@ApiParam(value = "Product ID", required = true) @RequestParam Integer product_id) {
         checkNotEmpty(product_id, GEN_01, "product_id");
 
@@ -116,9 +110,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Get a lit of Products of Categories")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a list of Product Objects"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public DtoPage<ProductDto> getByCategoryId(
         @ApiParam(value = "Category ID", required = true) @RequestParam Integer category_id,
         @ApiParam(value = "Inform the page. Starting with 1. Default: 1") @RequestParam(required = false) Integer page,
@@ -140,9 +132,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Get a list of Products on Department")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return the total and a list of products"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public DtoPage<ProductDto> getByDepartmentId(
         @ApiParam(value = "Department  ID", required = true) @RequestParam Integer department_id,
         @ApiParam(value = "Inform the page. Starting with 1. Default: 1") @RequestParam(required = false) Integer page,
@@ -164,9 +154,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Get details of a Product")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return a Object of Products"),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public ProductDetailsDto getDetails(@ApiParam(value = "Product ID", required = true) @RequestParam Integer product_id) {
         checkNotEmpty(product_id, GEN_01, "product_id");
 
@@ -191,9 +179,7 @@ public class ProductController implements Authentication, Validation {
     @ApiOperation(value = "Get locations of a Product")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Return locations of products."),
-        @ApiResponse(code = 400, message = "Return a error object")
-    }
-    )
+        @ApiResponse(code = 400, message = "Return a error object")})
     public List<ProductLocationDto> getLocations(@ApiParam(value = "Product ID", required = true) @RequestParam Integer product_id) {
         checkNotEmpty(product_id, GEN_01, "product_id");
 
