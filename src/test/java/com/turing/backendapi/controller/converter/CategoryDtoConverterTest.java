@@ -27,7 +27,7 @@ public class CategoryDtoConverterTest {
     @Test
     public void toDomain() {
         //given
-        CategoryDto dtoObj = new CategoryDto(123, 456, "nameTest", "descriptionTst");
+        CategoryDto dtoObj = new CategoryDto(123, "nameTest", "descriptionTst", 456);
 
         //when
         Category domainObj = CategoryDtoConverter.toDomain(dtoObj);

@@ -54,7 +54,7 @@ public interface ProductRepository extends PagingAndSortingRepository<ProductEnt
   @Modifying
   @Query(nativeQuery = true, value = "call catalog_create_product_review(:inCustomerId, :inProductId, :inReview, :inRating)")
   void createProductReview(@Param("inCustomerId") int inCustomerId,
-      @Param("inProductId") int inProductId,
-      @Param("inReview") String inReview,
-      @Param("inRating") int inRating);
+                           @Param("inProductId") int inProductId,
+                           @Param("inReview") String inReview,
+                           @Param("inRating") int inRating);
 }
