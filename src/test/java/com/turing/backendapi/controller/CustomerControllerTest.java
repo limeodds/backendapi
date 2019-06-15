@@ -22,15 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CustomerControllerTest {
-  public static final String DEFAULT_EMAIL = "liviu.marinescu@yahoo.com";
-  public static final String DEFAULT_PASSWORD = "pass";
 
   @LocalServerPort
   private int port;
 
   @Autowired
   private TestRestTemplate restTemplate;
-
 
   @Test
   public void register() {
@@ -44,7 +41,7 @@ public class CustomerControllerTest {
     params.add("password", password);
 
     ResponseEntity<LoginResponseDto> loginResp = restTemplate.postForEntity("http://localhost:" + port + "/customers",
-                                                                            new HttpEntity<>(params, headers()),
+                                                                            new HttpEntity<>(params, TestControllerUtil.headers()),
                                                                             LoginResponseDto.class);
 
     LoginResponseDto loginResponse = loginResp.getBody();
@@ -57,26 +54,18 @@ public class CustomerControllerTest {
   @Test
   public void login() {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("email", DEFAULT_EMAIL);
-    params.add("password", DEFAULT_PASSWORD);
+    params.add("email", TestControllerUtil.DEFAULT_EMAIL);
+    params.add("password", TestControllerUtil.DEFAULT_PASSWORD);
 
     ResponseEntity<LoginResponseDto> loginResp = restTemplate.postForEntity("http://localhost:" + port + "/customers/login",
-                                                                            new HttpEntity<>(params, headers()),
+                                                                            new HttpEntity<>(params, TestControllerUtil.headers()),
                                                                             LoginResponseDto.class);
 
     LoginResponseDto loginResponse = loginResp.getBody();
 
     assertThat(loginResponse.getCustomer().getSchema().getName()).isEqualTo("Liviu Teodor");
-    assertThat(loginResponse.getCustomer().getSchema().getEmail()).isEqualTo(DEFAULT_EMAIL);
+    assertThat(loginResponse.getCustomer().getSchema().getEmail()).isEqualTo(TestControllerUtil.DEFAULT_EMAIL);
     assertThat(loginResponse.getAccessToken()).startsWith("Bearer ");
-  }
-
-  private static HttpHeaders headers() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-
-    return headers;
   }
 
 }

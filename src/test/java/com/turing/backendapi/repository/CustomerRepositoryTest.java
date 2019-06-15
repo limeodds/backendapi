@@ -7,18 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CustomerRepositoryTest {
   @Autowired
   private CustomerRepository customerRepository;
 
-//  @Test
+  @Test
   public void create() {
+    String uuidStr = UUID.randomUUID().toString();
     CustomerEntity entiry = CustomerEntity.builder()
-                                          .name("Liviu Marinescu")
-                                          .email("liviu.marinescu@yahoo.com")
-                                          .password("turingrocks")
+                                          .name("Test Name uuidStr")
+                                          .email(uuidStr + "@test.com")
+                                          .password("pass")
                                           .credit_card("1234567890")
                                           .address_1("Address 1")
                                           .address_2("Address 2")
