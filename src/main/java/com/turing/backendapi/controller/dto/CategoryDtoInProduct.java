@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CategoryDtoInProduct {
 
-    @ApiModelProperty(value="1")
+    @ApiModelProperty(example = "1", position = 1)
     private int category_id;
 
-    @ApiModelProperty(value="1")
+    @ApiModelProperty(example = "1", position = 2)
     private int department_id;
 
-    @ApiModelProperty(value="French")
+    @ApiModelProperty(example = "Spain", position = 3)
     private String name;
 }
