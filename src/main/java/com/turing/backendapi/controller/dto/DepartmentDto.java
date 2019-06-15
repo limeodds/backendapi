@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DepartmentDto {
-  @ApiModelProperty(value="1")
+  @ApiModelProperty(example = "1", position = 1)
   private int department_id;
 
-  @ApiModelProperty(value="Regional")
+  @ApiModelProperty(example = "Regional", position = 2)
   private String name;
 
-  @ApiModelProperty(value="Proud of your country? Wear a T-shirt with a national symbol stamp!")
+  @ApiModelProperty(example = "Proud of your country? Wear a T-shirt with a national symbol stamp!", position = 3)
   private String description;
 }

@@ -1,21 +1,13 @@
 package com.turing.backendapi.controller;
 
 
-import static com.turing.backendapi.controller.exception.ErrorCodes.DEP_02;
-import static com.turing.backendapi.controller.exception.ErrorCodes.GEN_01;
-import static java.util.stream.Collectors.toList;
-
 import com.turing.backendapi.controller.converter.DepartmentDtoConverter;
 import com.turing.backendapi.controller.dto.DepartmentDto;
 import com.turing.backendapi.controller.exception.BadRequestException;
+import com.turing.backendapi.controller.exception.ErrorResponse;
 import com.turing.backendapi.domain.Department;
 import com.turing.backendapi.service.DepartmentService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import java.util.List;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,41 +15,46 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.turing.backendapi.controller.exception.ErrorCodes.DEP_02;
+import static com.turing.backendapi.controller.exception.ErrorCodes.GEN_01;
+
 @RestController
 @RequestMapping(value = "/departments", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(description = "Everything about Department", tags = {"departments"})
 public class DepartmentController implements Validation {
 
-    private final DepartmentService departmentService;
+  private final DepartmentService departmentService;
 
-    @Autowired
-    public DepartmentController(DepartmentService departmentService) {
-        this.departmentService = departmentService;
+  @Autowired
+  public DepartmentController(DepartmentService departmentService) {
+    this.departmentService = departmentService;
+  }
+
+  @GetMapping
+  @ApiOperation(value = "Get Departments", notes = "Return a list of department.")
+  @ApiResponses({
+                @ApiResponse(code = 200, message = "An Array of Object Department", response = DepartmentDto[].class),
+                @ApiResponse(code = 400, message = "Return a error object", response = ErrorResponse.class)})
+  public DepartmentDto[] getAll() {
+    return departmentService.getAll().stream().map(DepartmentDtoConverter::toDto).toArray(DepartmentDto[]::new);
+  }
+
+  @GetMapping(value = "/{department_id}")
+  @ApiOperation(value = "Get Department by ID")
+  @ApiResponses({
+                @ApiResponse(code = 200, message = "A object of Department", response = DepartmentDto.class),
+                @ApiResponse(code = 400, message = "Return a error object", response = ErrorResponse.class)})
+  @ApiImplicitParams({
+                     @ApiImplicitParam(name = "department_id", value = "ID of Department", required = true, dataType = "int", paramType = "path")})
+  public DepartmentDto getById(@PathVariable("department_id") Integer departmentId) {
+    checkNotEmpty(departmentId, GEN_01, "department_id");
+
+    Department byId = departmentService.getById(departmentId);
+
+    if (byId == null) {
+      throw new BadRequestException(DEP_02.getCode(), DEP_02.getDescription(), "department_id");
     }
 
-    @GetMapping
-    @ApiOperation(value = "Get Departments")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "An Array of Object Department"),
-        @ApiResponse(code = 400, message = "Return a error object")})
-    public List<DepartmentDto> getAll() {
-        return departmentService.getAll().stream().map(DepartmentDtoConverter::toDto).collect(toList());
-    }
-
-    @GetMapping(value = "/{department_id}")
-    @ApiOperation(value = "Get Department by ID")
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "A object of Department"),
-        @ApiResponse(code = 400, message = "Return a error object")})
-    public DepartmentDto getById(@ApiParam(value = "ID of Department", required = true) @PathVariable("department_id") Integer departmentId) {
-        checkNotEmpty(departmentId, GEN_01, "department_id");
-
-        Department byId = departmentService.getById(departmentId);
-
-        if (byId == null) {
-            throw new BadRequestException(DEP_02.getCode(), DEP_02.getDescription(), "department_id");
-        }
-
-        return DepartmentDtoConverter.toDto(byId);
-    }
+    return DepartmentDtoConverter.toDto(byId);
+  }
 }
