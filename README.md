@@ -40,3 +40,18 @@ You need Java installed.
 
     ./gradlew bootRun
     open http://localhost:8081
+    
+## Unit and functional Tests
+
+There are about 33 unit and functional tests.
+
+In order to be able to run them you need a database to connect to
+
+Also, you must create the following customer:
+
+     email: 'liviu.marinescu@yahoo.com'
+     password: 'pass'
+     
+## Scalability
+
+This is a completly stateless application. It scales horizontally by adding more instances.

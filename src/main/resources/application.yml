@@ -15,3 +15,7 @@ spring:
 
 
 stripe.secret.key: 'sk_test_lomdOfxbm7QDgZWvR82UhV6D'
+
+shoppingcart:
+  cleanup:
+    interval: 5

@@ -51,4 +51,10 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCartEntity
   @Modifying
   @Query(nativeQuery = true, value = "call shopping_cart_remove_product(:inItemId)")
   void removeProduct(@Param("inItemId") Integer inItemId);
+
+  @Modifying
+  @Query(nativeQuery = true, value = "call shopping_cart_delete_old_carts(:inDays)")
+  void cleanupOldCarts(@Param("inDays") Integer inDays);
+
+
 }

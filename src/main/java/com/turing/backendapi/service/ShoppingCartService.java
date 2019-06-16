@@ -4,6 +4,8 @@ import com.turing.backendapi.domain.CartProduct;
 import com.turing.backendapi.repository.ShoppingCartRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 @Slf4j
 public class ShoppingCartService {
+
+  @Value("${shoppingcart.cleanup.interval}")
+  private int cleanupInterval;
 
   private final ShoppingCartRepository shoppingCartRepository;
 
@@ -93,5 +98,16 @@ public class ShoppingCartService {
   @Transactional
   public void removeProduct(Integer itemId) {
     shoppingCartRepository.removeProduct(itemId);
+  }
+
+  @Transactional
+  @Scheduled(fixedRate = 1000 * 60 * 5)
+  public void cleanup() {
+    log.debug("cleanup old carts");
+    try {
+      shoppingCartRepository.cleanupOldCarts(cleanupInterval);
+    } catch (Exception e) {
+      log.error("", e);
+    }
   }
 }
