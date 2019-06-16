@@ -1,17 +1,17 @@
-# ![Turing Challenge - Backend API]
+# Turing Challenge - Backend API
 
 > ### Java 11 + Spring boot + MySql
 
 This codebase implements REST API endpoints as described in the swagger documentation
 https://backendapi.turing.com/docs/ 
 
-# Prerequisites
+## Prerequisites
 
 * Java 11 https://jdk.java.net/java-se-ri/11
 * Gradle https://gradle.org/install/
 * MySQL Community database https://dev.mysql.com/downloads/mysql/
 
-# How it works
+## How it works
 
 * The application uses Spring boot (Web, Security)
 * Lombok is heavily used throughout the code (https://projectlombok.org/)
@@ -23,15 +23,18 @@ There are three layers:
 2. 'service' layer where all teh business logic is done
 3. 'controller' layer that expose data through the REST API endpoints
 
+Each application layer uses it's own set of objects to transfer data. 
+There are specialized 'converter' objects specialized to convert those objects between layers
+
 You can check the APIs provided trough the swagger interface: 
 
     http://localhost:8081/swagger-ui.html
 
-# Security
+## Security
 
 Integration with Spring Security and add other filter for jwt token process.
 
-# Getting started
+## Getting started
 
 You need Java installed.
 
