@@ -74,7 +74,7 @@ public class ProductControllerTest {
     //Create review
     restTemplate.postForEntity("http://localhost:" + port + "/products/{product_id}/reviews",
                                new HttpEntity<>(params, headers),
-                               LoginResponseDto.class,
+                               String.class,
                                product_id);
 
     //select All reviews for a product and check that we have the previously created review

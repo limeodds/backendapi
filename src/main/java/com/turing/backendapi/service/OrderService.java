@@ -1,29 +1,20 @@
 package com.turing.backendapi.service;
 
-import static com.turing.backendapi.controller.exception.ErrorCodes.PAG_03;
-import static com.turing.backendapi.service.converter.ProductConverter.toDomain;
-import static java.util.stream.Collectors.toList;
-
-import com.turing.backendapi.controller.exception.BadRequestException;
-import com.turing.backendapi.domain.DomainPage;
-import com.turing.backendapi.domain.Product;
-import com.turing.backendapi.domain.ProductLocation;
-import com.turing.backendapi.domain.ProductReview;
+import com.turing.backendapi.domain.OrderDetails;
+import com.turing.backendapi.domain.OrderShortDetails;
 import com.turing.backendapi.repository.OrderRepository;
-import com.turing.backendapi.repository.ProductRepository;
-import com.turing.backendapi.repository.entity.ProductEntity;
-import com.turing.backendapi.service.converter.ProductConverter;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -39,8 +30,58 @@ public class OrderService {
   }
 
   @Transactional
-  public int createOrder(String cartId, int customerId, int shippingId, int taxId){
+  public int createOrder(String cartId, int customerId, int shippingId, int taxId) {
     return orderRepository.createOrder(cartId, customerId, shippingId, taxId);
   }
 
+  public OrderDetails getOrderDetails(int orderId) {
+    List<Object[]> os = orderRepository.getOrderDetails(orderId);
+
+    if(CollectionUtils.isEmpty(os)){
+      return null;
+    }
+
+    Object[] o = os.get(0);
+
+    return OrderDetails.builder()
+                       .order_id((Integer) o[0])
+                       .product_id((Integer) o[1])
+                       .attributes((String) o[2])
+                       .product_name((String) o[3])
+                       .quantity((Integer) o[4])
+                       .unit_cost((BigDecimal) o[5])
+                       .subtotal((BigDecimal) o[6])
+                       .build();
+  }
+
+  public List<OrderShortDetails> getOrdersByCustomer(int customerId) {
+    return orderRepository.getOrdersByCustomer(customerId).stream()
+                          .map(o -> OrderShortDetails.builder()
+                                                     .order_id((Integer) o[0])
+                                                     .total_amount((BigDecimal) o[1])
+                                                     .created_on(((Timestamp) o[2]).toLocalDateTime())
+                                                     .shipped_on(o[3] != null ? ((Timestamp) o[3]).toLocalDateTime() : null)
+                                                     .status((Integer) o[4])
+                                                     .name((String) o[5])
+                                                     .build()).collect(toList());
+  }
+
+  public OrderShortDetails getOrderShortDetails(int orderId) {
+    List<Object[]> os = orderRepository.getOrderShortDetails(orderId);
+
+    if(CollectionUtils.isEmpty(os)){
+      return null;
+    }
+
+    Object[] o = os.get(0);
+
+    return OrderShortDetails.builder()
+                            .order_id((Integer) o[0])
+                            .total_amount((BigDecimal) o[1])
+                            .created_on(((Timestamp) o[2]).toLocalDateTime())
+                            .shipped_on(o[3] != null ? ((Timestamp) o[3]).toLocalDateTime() : null)
+                            .status((Integer) o[4])
+                            .name((String) o[5])
+                            .build();
+  }
 }

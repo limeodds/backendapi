@@ -1,5 +1,9 @@
 package com.turing.backendapi.controller;
 
+import com.turing.backendapi.authentication.JwtTokenProvider;
+import com.turing.backendapi.controller.dto.CartIdDto;
+import com.turing.backendapi.controller.dto.CartProductDto;
+import com.turing.backendapi.controller.dto.OrderIdDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +13,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -29,19 +31,44 @@ public class OrderControllerTest {
 
   @Test
   public void createOrder() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+    String accessToken = TestControllerUtil.login(port, restTemplate);
 
-    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("email", "liviu.marinescu@yahoo.com");
-    params.add("password", "pass");
+    HttpHeaders headers = TestControllerUtil.headers();
+    headers.add(JwtTokenProvider.AUTHORISATION_HEADER_NAME, accessToken);
 
-    ResponseEntity<Map> loginResp = restTemplate.postForEntity("http://localhost:" + port + "/customers/login?",
+    String cart_id = restTemplate.getForEntity("http://localhost:" + port + "/shoppingcart/generateUniqueId", CartIdDto.class)
+                                 .getBody()
+                                 .getCart_id();
+    Integer product_id = 2;
+    String attributes = "LG, red";
+
+    MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+    params.add("cart_id", cart_id);
+    params.add("product_id", product_id);
+    params.add("attributes", attributes);
+
+
+    //Add Product to cart
+    CartProductDto[] cartProducts = restTemplate.postForEntity("http://localhost:" + port + "/shoppingcart/add",
                                                                new HttpEntity<>(params, headers),
-                                                               Map.class);
+                                                               CartProductDto[].class)
+                                                .getBody();
 
-    System.out.println("ups");
+    assertThat(cartProducts).hasSize(1);
+
+    //Create Order
+    params = new LinkedMultiValueMap<>();
+    params.add("cart_id", cart_id);
+    params.add("shipping_id", 2);
+    params.add("tax_id", 1);
+
+    Integer orderId = restTemplate.postForEntity("http://localhost:" + port + "/orders",
+                                                 new HttpEntity<>(params, headers),
+                                                 OrderIdDto.class)
+                                  .getBody().getOrderId();
+
+
+    assertThat(orderId).isGreaterThan(0);
 
   }
 }

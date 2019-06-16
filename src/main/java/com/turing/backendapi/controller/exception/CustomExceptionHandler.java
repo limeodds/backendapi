@@ -25,4 +25,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(Map.of("error", errorResponse), HttpStatus.BAD_REQUEST);
   }
 
+  @ExceptionHandler(NotFoundException.class)
+  public final ResponseEntity<Map> handleNotFoundException(NotFoundException ex, WebRequest request) {
+    return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.NOT_FOUND);
+  }
+
 }
