@@ -34,18 +34,22 @@ public class AttributeService {
   }
 
   public List<Attribute> getAll() {
+    log.info("getAll()");
     return attributeRepository.findAll().stream().map(AttributeConverter::toDomain).collect(toList());
   }
 
   public Attribute getById(Integer id) {
+    log.info("getById(id: {})", id);
     return AttributeConverter.toDomain(attributeRepository.findById(id).orElse(null));
   }
 
   public List<AttributeValue> getAttributeValuesByAttributeId(Integer attributeId) {
+    log.info("getAttributeValuesByAttributeId(attributeId: {})", attributeId);
     return attributeValueRepository.findByAttributeId(attributeId).stream().map(AttributeValueConverter::toDomain).collect(toList());
   }
 
   public List<ProductAttribute> getAttributeValuesByProductId(int productId) {
+    log.info("getAttributeValuesByProductId(productId: {})", productId);
     return attributeValueRepository.findByProductId(productId).stream()
                              .map(o -> (Object[]) o).map(o -> ProductAttribute.builder()
                                                                               .name((String) o[0])

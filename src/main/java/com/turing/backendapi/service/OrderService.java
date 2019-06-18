@@ -11,7 +11,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -31,10 +30,12 @@ public class OrderService {
 
   @Transactional
   public int createOrder(String cartId, int customerId, int shippingId, int taxId) {
+    log.info("createOrder(cartId: {}, customerId: {}, shippingId: {}, taxId: {})", cartId, customerId, shippingId, taxId);
     return orderRepository.createOrder(cartId, customerId, shippingId, taxId);
   }
 
   public OrderDetails getOrderDetails(int orderId) {
+    log.info("getOrderDetails(orderId: {})", orderId);
     List<Object[]> os = orderRepository.getOrderDetails(orderId);
 
     if(CollectionUtils.isEmpty(os)){
@@ -55,6 +56,7 @@ public class OrderService {
   }
 
   public List<OrderShortDetails> getOrdersByCustomer(int customerId) {
+    log.info("getOrdersByCustomer(customerId: {})", customerId);
     return orderRepository.getOrdersByCustomer(customerId).stream()
                           .map(o -> OrderShortDetails.builder()
                                                      .order_id((Integer) o[0])
@@ -67,6 +69,7 @@ public class OrderService {
   }
 
   public OrderShortDetails getOrderShortDetails(int orderId) {
+    log.info("getOrderShortDetails(orderId: {})", orderId);
     List<Object[]> os = orderRepository.getOrderShortDetails(orderId);
 
     if(CollectionUtils.isEmpty(os)){

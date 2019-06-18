@@ -71,16 +71,19 @@ public class CategoryService {
   }
 
   public Category getById(Integer id) {
+    log.info("getById(id: {})", id);
     return toDomain(categoryRepository.findById(id).orElse(null));
   }
 
   public List<Category> getByProductId(int productId) {
+    log.info("getByProductId(productId: {})", productId);
     return categoryRepository.findInProduct(productId).stream()
                              .map(o -> (Object[]) o).map(o -> Category.builder().category_id((Integer) o[0]).department_id((Integer) o[1]).name((String) o[2]).build())
                              .collect(toList());
   }
 
   public List<Category> getByDepartmentId(Integer departmentId) {
+    log.info("getByDepartmentId(departmentId: {})", departmentId);
     return categoryRepository.findByDepartmentId(departmentId).stream()
                              .map(CategoryConverter::toDomain).collect(toList());
 

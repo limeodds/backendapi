@@ -32,15 +32,18 @@ public class ShoppingCartService {
   }
 
   public String generateUniqueId() {
+    log.info("generateUniqueId()");
     return UUID.randomUUID().toString().replaceAll("-", "");
   }
 
   @Transactional
   public void addProduct(String cartId, int productId, String attributes) {
+    log.info("addProduct(cartId: {}, productId: {}, attributes: {})", cartId, productId, attributes);
     shoppingCartRepository.addProduct(cartId, productId, attributes);
   }
 
   public List<CartProduct> getProducts(String cartId) {
+    log.info("getProducts(cartId: {})", cartId);
     return shoppingCartRepository.findProducts(cartId).stream()
                                  .map(o -> CartProduct.builder()
                                                       .item_id((Integer) o[0])
@@ -57,34 +60,40 @@ public class ShoppingCartService {
 
   @Transactional
   public void updateCart(int itemId, int quantity) {
+    log.info("updateCart(itemId: {}, quantity: {})", itemId, quantity);
     shoppingCartRepository.updateCart(itemId, quantity);
   }
 
   public String getCartIdByItemId(Integer itemId) {
+    log.info("getCartIdByItemId(itemId: {})", itemId);
     return shoppingCartRepository.findCartIdByItemId(itemId);
   }
 
   @Transactional
   public void emptyShopingCart(String cartId) {
+    log.info("emptyShopingCart(cartId: {})", cartId);
     shoppingCartRepository.emptyShopingCart(cartId);
-
   }
 
   @Transactional
   public void moveProductToCart(Integer itemId) {
+    log.info("moveProductToCart(itemId: {})", itemId);
     shoppingCartRepository.moveProductToCart(itemId);
   }
 
   public BigDecimal getTotalAmount(String cartId) {
+    log.info("getTotalAmount(cartId: {})", cartId);
     return shoppingCartRepository.getTotalAmount(cartId);
   }
 
   @Transactional
   public void saveProductForLater(Integer itemId) {
+    log.info("saveProductForLater(itemId: {})", itemId);
     shoppingCartRepository.saveProductForLater(itemId);
   }
 
   public List<CartProduct> getSavedProducts(String cartId) {
+    log.info("getSavedProducts(cartId: {})", cartId);
     return shoppingCartRepository.findSavedProducts(cartId).stream()
                                  .map(o -> CartProduct.builder()
                                                       .item_id((Integer) o[0])
@@ -97,6 +106,7 @@ public class ShoppingCartService {
 
   @Transactional
   public void removeProduct(Integer itemId) {
+    log.info("removeProduct(itemId: {})", itemId);
     shoppingCartRepository.removeProduct(itemId);
   }
 

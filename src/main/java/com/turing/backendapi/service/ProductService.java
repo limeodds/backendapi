@@ -44,7 +44,7 @@ public class ProductService {
    * @param limit Items per page
    */
   public DomainPage<Product> getPage(int page, int limit) {
-    log.debug("getPage(page:{}, limit: {}", page, limit);
+    log.debug("getPage(page:{}, limit: {})", page, limit);
     if (page < 1) {
       throw new BadRequestException(PAG_03.getCode(), PAG_03.getDescription(), "page");
     }
@@ -61,10 +61,12 @@ public class ProductService {
   }
 
   public int catalogSearchCount(String searchString, String allWords){
+    log.debug("catalogSearchCount(searchString:{}, allWords: {})", searchString, allWords);
     return productRepository.catalogSearchCount(searchString, allWords);
   }
 
   public List<Product> catalogSearch(String searchString, String allWords, int page, int limit, int description_length) {
+    log.debug("catalogSearch(searchString:{}, allWords: {}, page: {}, limit: {}, description_length: {})", searchString, allWords, page, limit, description_length);
     return productRepository.catalogSearch(searchString, allWords, description_length, limit, page)
                             .stream()
                             .map(o -> Product.builder()
@@ -83,6 +85,7 @@ public class ProductService {
   }
 
   public List<Product> productsInCategory(int categoryId, int page, int limit, int description_length) {
+    log.debug("productsInCategory(categoryId:{},  page: {}, limit: {}, description_length: {})", categoryId, page, limit, description_length);
     return productRepository.productsInCategory(categoryId, description_length, limit, page)
                             .stream()
                             .map(o -> Product.builder()
@@ -98,10 +101,12 @@ public class ProductService {
 
 
   public int productsInDepartmentCount(int departmentId){
+    log.debug("productsInDepartmentCount(departmentId:{})", departmentId);
     return productRepository.productsInDepartmentCount(departmentId);
   }
 
   public List<Product> productsInDepartment(int departmentId, int page, int limit, int description_length) {
+    log.debug("productsInDepartment(departmentId:{},  page: {}, limit: {}, description_length: {})", departmentId, page, limit, description_length);
     return productRepository.productsInDepartment(departmentId, description_length, limit, page)
                             .stream()
                             .map(o -> Product.builder()
@@ -116,10 +121,12 @@ public class ProductService {
   }
 
   public Product getById(Integer id) {
+    log.debug("getById(id:{})", id);
     return toDomain(productRepository.findById(id).orElse(null));
   }
 
   public List<ProductLocation> getProductLocations(int productId) {
+    log.debug("getProductLocations(productId: {})", productId);
     return productRepository.productLocations(productId)
         .stream()
         .map(o -> ProductLocation.builder()
@@ -132,6 +139,7 @@ public class ProductService {
   }
 
   public List<ProductReview> getProductReviews(int productId) {
+    log.debug("getProductReviews(productId: {})", productId);
     return productRepository.productReviews(productId)
         .stream()
         .map(o -> ProductReview.builder()
@@ -145,6 +153,7 @@ public class ProductService {
 
   @Transactional
   public void createProductReview(int customerId, int productId, String review, int rating){
+    log.debug("createProductReview(customerId: {}, productId: {}, review: {}, rating {})", customerId, productId, review, rating);
     productRepository.createProductReview(customerId, productId, review, rating);
   }
 }
