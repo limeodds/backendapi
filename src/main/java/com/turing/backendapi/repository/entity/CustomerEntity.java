@@ -28,7 +28,10 @@ public class CustomerEntity {
   private String email;
 
   @Column(name = "password")
-  private String password;
+  private String passwordHash;
+
+  @Column(name = "salt")
+  private String salt;
 
   @Column(name = "credit_card")
   private String credit_card;

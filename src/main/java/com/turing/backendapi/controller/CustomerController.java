@@ -76,7 +76,7 @@ public class CustomerController implements Authentication, Validation {
     byId.setName(name);
     byId.setEmail(email);
     if (!StringUtils.isEmpty(password)) {
-      byId.setPassword(password);
+      byId.setPasswordHash(customerService.hashPassword(password, byId.getSalt()));
     }
     byId.setDay_phone(day_phone);
     byId.setEve_phone(eve_phone);
@@ -120,17 +120,21 @@ public class CustomerController implements Authentication, Validation {
       throw new BadRequestException(USR_04.getCode(), USR_04.getDescription(), "email");
     }
 
+    String salt = customerService.getNextSalt();
+    String passwordHash = customerService.hashPassword(password, salt);
+
     Customer newCustomer = Customer.builder()
                                    .name(name)
                                    .email(email)
-                                   .password(password)
+                                   .passwordHash(passwordHash)
+                                   .salt(salt)
                                    .build();
 
     Customer savedCustomer = customerService.save(newCustomer);
 
     return LoginResponseDto.builder()
                            .customer(new LoginResponseDto.Customer(toDto(savedCustomer)))
-                           .accessToken(authenticate(email, password))
+                           .accessToken(authenticate(email, passwordHash))
                            .expires_in("24h")
                            .build();
   }
@@ -155,15 +159,24 @@ public class CustomerController implements Authentication, Validation {
       throw new BadRequestException(USR_05.getCode(), USR_05.getDescription(), "email");
     }
 
+    //check passwordHash to match
+    System.out.println(customer.getSalt());
+    System.out.println(customerService.hashPassword(password, customer.getSalt()));
+    System.out.println(customer.getPasswordHash());
+
+    if(!customer.getPasswordHash().equals(customerService.hashPassword(password, customer.getSalt()))){
+      throw new BadRequestException(USR_01.getCode(), USR_01.getDescription(), "email, password");
+    }
+
     return LoginResponseDto.builder()
                            .customer(new LoginResponseDto.Customer(toDto(customer)))
-                           .accessToken(authenticate(email, password))
+                           .accessToken(authenticate(email, customer.getPasswordHash()))
                            .expires_in("24h")
                            .build();
   }
 
-  private String authenticate(String email, String password) {
-    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+  private String authenticate(String email, String passwordHash) {
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, passwordHash));
     return jwtTokenProvider.createToken(email, Collections.emptyList());
   }
 

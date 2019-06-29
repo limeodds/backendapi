@@ -2,7 +2,6 @@ package com.turing.backendapi.service.converter;
 
 import com.turing.backendapi.domain.Customer;
 import com.turing.backendapi.repository.entity.CustomerEntity;
-import com.turing.backendapi.repository.entity.DepartmentEntity;
 
 public class CustomerConverter {
   public static CustomerEntity toDb(Customer domainObj) {
@@ -13,7 +12,8 @@ public class CustomerConverter {
                          .customer_id(domainObj.getCustomer_id())
                          .name(domainObj.getName())
                          .email(domainObj.getEmail())
-                         .password(domainObj.getPassword())
+                         .passwordHash(domainObj.getPasswordHash())
+                         .salt(domainObj.getSalt())
                          .credit_card(domainObj.getCredit_card())
                          .address_1(domainObj.getAddress_1())
                          .address_2(domainObj.getAddress_2())
@@ -37,7 +37,8 @@ public class CustomerConverter {
                    .customer_id(entityObj.getCustomer_id())
                    .name(entityObj.getName())
                    .email(entityObj.getEmail())
-                   .password(entityObj.getPassword())
+                   .passwordHash(entityObj.getPasswordHash())
+                   .salt(entityObj.getSalt())
                    .credit_card(entityObj.getCredit_card())
                    .address_1(entityObj.getAddress_1())
                    .address_2(entityObj.getAddress_2())

@@ -21,7 +21,7 @@ public class CustomerRepositoryTest {
     CustomerEntity entiry = CustomerEntity.builder()
                                           .name("Test Name uuidStr")
                                           .email(uuidStr + "@test.com")
-                                          .password("pass")
+                                          .passwordHash("pass")
                                           .credit_card("1234567890")
                                           .address_1("Address 1")
                                           .address_2("Address 2")

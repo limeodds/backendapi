@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.turing.backendapi.controller.exception.ErrorCodes.GEN_01;
 import static com.turing.backendapi.controller.exception.ErrorCodes.PRD_01;
@@ -68,10 +70,12 @@ public class ProductController implements Authentication, Validation {
                                 @RequestParam(required = false, defaultValue = "200") Integer description_length) {
     checkNotEmpty(query_string, GEN_01, "query_string");
 
+    query_string = Stream.of(query_string.split(" ")).map(s -> s + "*").collect(Collectors.joining(" "));
+
     all_words = "off".equals(all_words) ? "off" : "on";
 
     return new DtoProductsPage(productService.catalogSearchCount(query_string, all_words),
-                               productService.catalogSearch(query_string, all_words, page, limit, description_length)
+                               productService.catalogSearch(query_string, all_words, page - 1, limit, description_length)
                                              .stream()
                                              .map(o -> ProductDtoConverter.toDto(o, description_length)).collect(toList()));
   }

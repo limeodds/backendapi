@@ -2,11 +2,14 @@ package com.turing.backendapi.service.converter;
 
 import com.turing.backendapi.domain.Customer;
 import com.turing.backendapi.repository.entity.CustomerEntity;
+import com.turing.backendapi.service.CustomerService;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CustomerConverterTest {
+
+  private CustomerService customerService = new CustomerService(null);
 
   @Test
   public void toDb() {
@@ -14,7 +17,8 @@ public class CustomerConverterTest {
     Customer domainObj = new Customer(123,
                                       "name",
                                       "email",
-                                      "password",
+                                      "passwordHash",
+                                      customerService.getNextSalt(),
                                       "credit_card",
                                       "address_1",
                                       "address_2",
@@ -34,7 +38,8 @@ public class CustomerConverterTest {
     assertThat(entityObj.getCustomer_id()).isEqualTo(domainObj.getCustomer_id());
     assertThat(entityObj.getName()).isEqualTo(domainObj.getName());
     assertThat(entityObj.getEmail()).isEqualTo(domainObj.getEmail());
-    assertThat(entityObj.getPassword()).isEqualTo(domainObj.getPassword());
+    assertThat(entityObj.getPasswordHash()).isEqualTo(domainObj.getPasswordHash());
+    assertThat(entityObj.getSalt()).isEqualTo(domainObj.getSalt());
     assertThat(entityObj.getCredit_card()).isEqualTo(domainObj.getCredit_card());
     assertThat(entityObj.getAddress_1()).isEqualTo(domainObj.getAddress_1());
     assertThat(entityObj.getAddress_2()).isEqualTo(domainObj.getAddress_2());
@@ -54,7 +59,8 @@ public class CustomerConverterTest {
     CustomerEntity entityObj = new CustomerEntity(123,
                                                   "name",
                                                   "email",
-                                                  "password",
+                                                  "passwordHash",
+                                                  customerService.getNextSalt(),
                                                   "credit_card",
                                                   "address_1",
                                                   "address_2",
@@ -74,7 +80,8 @@ public class CustomerConverterTest {
     assertThat(domainObj.getCustomer_id()).isEqualTo(entityObj.getCustomer_id());
     assertThat(domainObj.getName()).isEqualTo(entityObj.getName());
     assertThat(domainObj.getEmail()).isEqualTo(entityObj.getEmail());
-    assertThat(domainObj.getPassword()).isEqualTo(entityObj.getPassword());
+    assertThat(domainObj.getPasswordHash()).isEqualTo(entityObj.getPasswordHash());
+    assertThat(domainObj.getSalt()).isEqualTo(entityObj.getSalt());
     assertThat(domainObj.getCredit_card()).isEqualTo(entityObj.getCredit_card());
     assertThat(domainObj.getAddress_1()).isEqualTo(entityObj.getAddress_1());
     assertThat(domainObj.getAddress_2()).isEqualTo(entityObj.getAddress_2());

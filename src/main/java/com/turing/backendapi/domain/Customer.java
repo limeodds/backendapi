@@ -16,7 +16,8 @@ public class Customer {
   private int customer_id;
   private String name;
   private String email;
-  private String password;
+  private String passwordHash;
+  private String salt;
   private String credit_card;
   private String address_1;
   private String address_2;
