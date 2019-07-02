@@ -159,11 +159,6 @@ public class CustomerController implements Authentication, Validation {
       throw new BadRequestException(USR_05.getCode(), USR_05.getDescription(), "email");
     }
 
-    //check passwordHash to match
-    System.out.println(customer.getSalt());
-    System.out.println(customerService.hashPassword(password, customer.getSalt()));
-    System.out.println(customer.getPasswordHash());
-
     if(!customer.getPasswordHash().equals(customerService.hashPassword(password, customer.getSalt()))){
       throw new BadRequestException(USR_01.getCode(), USR_01.getDescription(), "email, password");
     }
